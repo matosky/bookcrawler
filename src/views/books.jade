@@ -1,0 +1,29 @@
+doctype html
+html
+  head
+    title= title
+    link(rel="shortcut icon" href="#")
+    link(rel='stylesheet' href='../../stylesheets/style.css')
+  body
+    header
+      div.container
+        nav
+          a(href="/books")  
+            h1 Book
+              span.logo Crawler 
+          div.flex2
+
+            a.sign(href="/users/logout") Logout
+    section.container
+      div.row
+        h1 All Books
+        div#link 
+          a.addbook(href="/books/addbooks") Add New Book
+      hr
+    section.container
+      ul 
+        each book in JSON.parse(books)
+          a(href=`/books/details/${book.bookId}`)
+            li
+              h3= book.Title
+              p= book.Author

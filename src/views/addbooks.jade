@@ -1,0 +1,38 @@
+doctype html
+html
+    head
+        title= title
+        link(rel="shortcut icon" href="#")
+        link(rel='stylesheet' href='../../stylesheets/style.css')
+    body
+        header
+            div.container
+                nav
+                    a(href="/books")  
+                        h1 Book
+                            span.logo Crawler 
+                    div.flex2
+                        a.sign(href="/users/logout") Logout
+        div.container 
+            h1 #{title}
+            div.formBox
+                form( action="http://localhost:8080/books" method="POST" )
+                    div.titleField.fied 
+                        label Title
+                        input(type="text" name="Title" id="Title" placeholder="enter title")
+                    div.authorField.field 
+                        label Author
+                        input(type="text" id="Author" name="Author" placeholder="enter author")
+                    div.descriptionField.field 
+                        label Description
+                        input(type="text" id="Description" name="Description" placeholder="enter description")
+                    div.genreField.field 
+                        label Genre
+                        input(type="text" id="Genre" name="Genre" placeholder="enter genre")
+                    div.publisherField.field 
+                        label Publisher
+                        input(type="text" id="Publisher" name="Publisher" placeholder="enter publisher")
+                    div.pagesField.field 
+                        label Page Count
+                        input(type="number" id="pageCount" name="pageCount" placeholder="enter number of pages")
+                    button(type="submit") Submit

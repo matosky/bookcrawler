@@ -1,0 +1,68 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible" content="IE=edge")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        title login
+        link(rel='stylesheet' href='../../stylesheets/style.css')
+    body 
+        div.login
+            form(action="")
+                div.email
+                    label Enter Email
+                    input(type="email" id="email" name="email" placeholder="enter email")
+                div.password 
+                    label Enter Password
+                    input(type="password" id="password" name="password" placeholder="enter password")
+                div.logFlex
+                    button#logBtn(type="submit") Login 
+                    span OR
+                    hr
+                    a(href="/users/signup") Sign Up
+        script. 
+            const logBtn = document.getElementById("logBtn");
+            const email = document.getElementById("email");
+            const password = document.getElementById("password");
+
+            let emailValue = "";
+            let passwordValue = "";
+            logBtn.addEventListener("click", loginUser)
+            email.addEventListener("input", (e)=>{
+                emailValue = e.target.value;
+            })
+            password.addEventListener("input", (e)=>{
+                passwordValue = e.target.value;
+            })
+
+            async function loginUser(e){
+                e.preventDefault();
+                if(!emailValue || !passwordValue){
+                    alert("all fields must be filled");
+                    return;
+                }
+
+                const user = {
+                    email: emailValue,
+                    password: passwordValue
+                }
+
+                const id = e.target.dataset.id;
+                const URL = "http://localhost:8080/users/login";
+                await fetch(URL, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(user)
+                }).then(response=>{
+                    return response.json();
+                }).then(data=>{
+                    location.assign("/books")
+                }).catch(err=>{
+                    console.log(err);
+                })
+
+                email.value = ""
+                password.value = ""
+
+                console.log(user)
+            }

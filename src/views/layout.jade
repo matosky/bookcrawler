@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    title= title
+    link(rel="shortcut icon" href="#")
+    link(rel='stylesheet' href='../../stylesheets/style.css')
+  body
+    header
+      div.container
+        nav
+          a(href="/books")  
+            h1 Book
+              span.logo Crawler 
+          div.flex2
+            - let user = {loggedIn:false, name:"akari"}
+            if user.loggedIn
+              h3.name #{ user.name }
+              a.sign(href="/users/logout")  
+                | Logout
+            else
+              a.sign(href="/users/login") Login 
+              a.sign(href="/users/signup") Sign-up
+    main.main 
+      a.action(href="/books") View Library
+    block content

@@ -1,0 +1,90 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible" content="IE=edge")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        title signup
+        link(rel='stylesheet' href='../../stylesheets/style.css')
+    body 
+        div.signup
+            form(action="")
+                div.nameField
+                    label First Name
+                    input(type="text" name="firstname" id="firstname" placeholder="firstname")
+                div.nameField 
+                    label Last Name
+                    input(type="text" id="lastname" name="lastname" placeholder="enter lastname")
+                div.email
+                    label Enter Email
+                    input(type="email" id="email" name="email" placeholder="enter email")
+                div.password 
+                    label Enter Password
+                    input(type="password" id="password" name="password" placeholder="enter password")
+                button#signBtn(type="submit") Submit 
+    script. 
+        const firstname  = document.getElementById("firstname");
+        const lastname = document.getElementById("lastname");
+        const email  = document.getElementById("email");
+        const password = document.getElementById("password");
+        const signupBtn = document.getElementById("signBtn");
+
+        signupBtn.addEventListener("click", signUp)
+
+        //- .............SignUp User.....................
+        let firstnameValue = "";
+        let lastnameValue = "";
+        let emailValue = "";
+        let passwordValue = "";
+
+        firstname.addEventListener("input", (e)=>{
+            firstnameValue = e.target.value;
+        })
+        lastname.addEventListener("input", (e)=>{
+            lastnameValue = e.target.value;
+        })
+        email.addEventListener("input", (e)=>{
+            emailValue = e.target.value;
+        })
+        password.addEventListener("input", (e)=>{
+            passwordValue = e.target.value;
+        })
+
+        async function signUp(e){
+            e.preventDefault();
+            if(!firstnameValue || !lastnameValue || !emailValue || !passwordValue){
+                alert("all fields must be filled");
+                return;
+            }
+
+            const user = {
+                firstname: firstnameValue,
+                lastname: lastnameValue,
+                email: emailValue,
+                password: passwordValue
+            }
+
+            const id = e.target.dataset.id;
+            const URL = "http://localhost:8080/users/signup";
+            await fetch(URL, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(user)
+            }).then(response=>{
+                return response.json();
+            }).then(data=>{
+                const token = {jwt: data.token}
+                localStorage.setItem("user",JSON.stringify(token))
+                console.log(token);
+                location.assign("/");
+            }).catch(err=>{
+                console.log(err);
+            })
+
+            firstname.value = ""
+            lastname.value = ""
+            email.value = ""
+            password.value = ""
+
+            console.log(user)
+        }

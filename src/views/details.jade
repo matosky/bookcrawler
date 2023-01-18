@@ -1,0 +1,157 @@
+doctype html
+html
+    head
+        title= Details
+        link(rel="shortcut icon" href="#")
+        link(rel='stylesheet' href='../../stylesheets/style.css')
+    body
+        header
+            div.container
+                nav
+                    a(href="/books")  
+                        h1 Book
+                            span.logo Crawler 
+                        div.flex2
+                            a.sign(href="/users/logout") Logout
+        div.container
+            div.modal
+                span.close X 
+                form.editForm
+                    div.titleField.fied 
+                        label.eL Title
+                        input.in(type="text" name="Title" id="Title" placeholder="enter title")
+                    div.authorField.field 
+                        label.eL Author
+                        input.in(type="text" id="Author" name="Author" placeholder="enter author")
+                    div.descriptionField.field 
+                        label.eL Description
+                        input.in(type="text" id="Description" name="Description" placeholder="enter description")
+                    div.genreField.field 
+                        label.eL Genre
+                        input.in(type="text" id="Genre" name="Genre" placeholder="enter genre")
+                    div.publisherField.field 
+                        label.eL Publisher
+                        input.in(type="text" id="Publisher" name="Publisher" placeholder="enter publisher")
+                    div.pagesField.field 
+                        label.eL Page Count
+                        input.in(type="number" id="pageCount" name="pageCount" placeholder="enter number of pages")
+                    button.editBtn(type="submit" data-id=`${book.bookId}`) Update
+            section.flex
+                div 
+                    h1= book.Title
+                    p.author= `By ${book.Author}` 
+                div
+                    div.flex2
+                        button.edit Edit book
+                        a.delete(href="#" data-id=`${book.bookId}`) detete book 
+            section 
+                p.description= book.Description
+        script. 
+            const modal = document.querySelector(".modal");
+            const editBtn = document.querySelector(".edit");
+            const deleteBtn = document.querySelector("a.delete");
+            const title  = document.getElementById("Title");
+            const author = document.getElementById("Author");
+            const description = document.getElementById("Description");
+            const genre = document.getElementById("Genre");
+            const publisher = document.getElementById("Publisher");
+            const pageCount = document.getElementById("pageCount");
+            const upDateBtn = document.querySelector(".editBtn");
+            const closeBtn = document.querySelector(".close");
+
+            editBtn.addEventListener("click", displayModal);
+            function displayModal(){
+                modal.classList.add("displayModal");
+            }
+
+            closeBtn.addEventListener("click", closeModal)
+            function closeModal(){
+                modal.classList.remove("displayModal");
+            }
+
+            //- Handling delete request.................................
+            deleteBtn.addEventListener("click", deleteBook);
+            async function deleteBook(e){
+                console.log(e.target.dataset.id)
+                const id = e.target.dataset.id;
+                const URL = `http://localhost:8080/books/${id}`;
+                await fetch(URL, {
+                    method: "DELETE",
+                }).then(response=>{
+                    return response.json();
+                }).then(data=>{
+                    console.log(data)
+                    location.assign(data.redirect)
+                }).catch(err=>{
+                    console.log(err);
+                })
+            }
+
+            //- Handling patch request.................................
+            let titleValue  = "";
+            let authorValue = "";
+            let descriptionValue = "";
+            let genreValue = "";
+            let publisherValue = "";
+            let pageCountValue = "";
+
+            title.addEventListener("input", (e)=>{
+                titleValue = e.target.value;
+                console.log(titleValue)
+            })
+            author.addEventListener("input", (e)=>{
+                authorValue = e.target.value;
+                console.log(authorValue)
+            })
+            description.addEventListener("input", (e)=>{
+                descriptionValue = e.target.value;
+                console.log(descriptionValue)
+            })
+            publisher.addEventListener("input", (e)=>{
+                publisherValue = e.target.value;
+                console.log(publisherValue)
+            })
+            genre.addEventListener("input", (e)=>{
+                genreValue = e.target.value;
+                console.log(genreValue)
+            })
+            pageCount.addEventListener("input", (e)=>{
+                pageCountValue = e.target.value;
+                console.log(pageCountValue)
+            })
+
+            upDateBtn.addEventListener("click", upDateBook)
+            async function upDateBook(e){
+                e.preventDefault();
+                const upDatedBook = 
+                {
+                    title: titleValue,
+                    author: authorValue,
+                    description: descriptionValue,
+                    genre: genreValue,
+                    publisher: publisherValue,
+                    pageCount: pageCountValue
+                }
+                console.log(upDatedBook)
+                const id = e.target.dataset.id;
+                const URL = `http://localhost:8080/books/${id}`;
+                await fetch(URL, {
+                    method: "PATCH",
+                    body: JSON.stringify(upDatedBook),
+                    headers: {"Content-Type": "application/json"}
+                }).then(response=>{
+                    return response.json();
+                }).then(data=>{
+                    console.log(data)
+                    location.assign("/books")
+                }).catch(err=>{
+                    console.log(err);
+                })
+
+                title.value  = "";
+                author.value = "";
+                description.value = "";
+                genre.value = "";
+                publisher.value = "";
+                pageCount.value = "";
+            }
